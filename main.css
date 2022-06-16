@@ -1,0 +1,19 @@
+.variants {
+  display: flex;
+  gap: 10px;
+}
+
+.variants__item {
+  width: 30px;
+  height: 30px;
+  border: 1px dashed #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.word {
+  padding: 20px 0;
+  display: flex;
+  gap: 5px;
+}
