@@ -3,7 +3,7 @@ class WordGame extends HTMLElement {
     super()
     this.word = "word";
     this.currentIndex = 0;
-    this.variantsCount = 3;
+    this.variantsCount = 5;
     this.variantsGenerated = 0;
     this.wordWrapper = this.querySelector('.word');
 
@@ -33,12 +33,12 @@ class WordGame extends HTMLElement {
       const variantsItem = document.createElement('div');
       variantsItem.classList.add('variants__item');
       variantsItem.innerText = letter;
-
-      console.log(document);
-      document.querySelector('.variants').innerHTML += variantsItem;
+      this.querySelector('.variants').append(variantsItem);
     });
 
-
+    const variantContainers = this.querySelectorAll('.variants__item');
+    const randomContainerForLetter = variantContainers[Math.floor(Math.random() * variantContainers.length)];
+    randomContainerForLetter.innerHTML = Array.from(this.word)[0];
   }
 
   initGame() {
