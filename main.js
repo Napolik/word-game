@@ -6,6 +6,9 @@ class WordGame extends HTMLElement {
     this.hp = 3;
     this.currentIndex = 0;
     this.variantsCount = 3;
+    this.score = 0;
+    this.wins = 0;
+    this.loses = 0;
 
     this.initGame();
     this.eventListener();
@@ -28,14 +31,17 @@ class WordGame extends HTMLElement {
             if (this.currentIndex !== this.word.length) {
               this.generateVariants(this.currentIndex);
             } else {
+              this.addScorePoints(this.word);
+              this.wins++;
               this.restartGame('You win! Correct word is: ' + this.word);
             }
-          } 
+          }
         } else {
           this.hp--;
           this.setInfo();
           this.querySelector('.message').innerText = 'Wrong letter!';
           if (this.hp === 0) {
+            this.loses++;
             this.restartGame('You die! Correct word is: ' + this.word);
           }
         }
@@ -66,6 +72,8 @@ class WordGame extends HTMLElement {
   setInfo() {
     this.querySelector('.hp').innerHTML = 'Health points: ' + this.hp;
     this.querySelector('.currentPosition').innerHTML = 'Current position: ' + this.currentIndex;
+    this.querySelector('.wins').innerHTML = 'Wins: ' + this.wins;
+    this.querySelector('.loses').innerHTML = 'Loses: ' + this.loses;
   }
 
   setLetter(letter) {
@@ -115,6 +123,11 @@ class WordGame extends HTMLElement {
       emptyLetter.classList.add('letter');
       wordWrapper.append(emptyLetter);
     }
+  }
+
+  addScorePoints(word) {
+    this.score += word.length;
+    this.querySelector('.score').innerHTML = 'Score: ' + this.score;
   }
 
 
