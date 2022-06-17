@@ -27,7 +27,7 @@ class WordGame extends HTMLElement {
             if (this.currentIndex !== this.word.length) {
               this.generateVariants(this.currentIndex);
             } else {
-              this.querySelector('.message').innerText = 'You win!';
+              this.restartGame('You win!');
             }
           } else {
             this.querySelector('.message').innerText = 'You die!';
@@ -37,9 +37,7 @@ class WordGame extends HTMLElement {
           this.setInfo();
           this.querySelector('.message').innerText = 'Wrong letter!';
           if (this.hp === 0) {
-            this.hp = 3;
-            this.initGame();
-            this.querySelector('.message').innerText = 'You die!';
+            this.restartGame('You die!');
           }
         }
       }
@@ -51,6 +49,13 @@ class WordGame extends HTMLElement {
     this.setInfo();
     this.generateVariants(0);
     this.generateEmptyWord(this.word);
+  }
+
+  restartGame(message) {
+    this.hp = 3;
+    this.currentIndex = 0;
+    this.initGame();
+    this.querySelector('.message').innerText = message + ' Game restarted.';
   }
 
   setInfo() {
