@@ -130,7 +130,6 @@ class WordGame extends HTMLElement {
     this.querySelector('.score').innerHTML = 'Score: ' + this.score;
   }
 
-
 }
 
 customElements.define('word-game', WordGame);
