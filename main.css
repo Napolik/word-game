@@ -1,6 +1,6 @@
 .variants {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 
 .variants__item {
@@ -10,10 +10,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .word {
   padding: 20px 0;
   display: flex;
   gap: 5px;
+}
+
+.letter {
+  width: 30px;
+  height: 30px;
+  border: 1px dashed #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info {
+  padding: 20px 0;
 }
