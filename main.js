@@ -1,6 +1,7 @@
 class WordGame extends HTMLElement {
   constructor() {
     super()
+    this.words = ["time", "year", "people", "way", "day", "man", "thing", "woman", "life", "child", "world", "school", "state", "family", "student", "group", "country", "problem", "hand", "part", "place", "case", "week", "company", "system", "program", "question", "work", "government", "number", "night", "point", "home", "water", "room", "mother", "area", "money", "story", "fact", "month", "lot", "right", "study", "book", "eye", "job", "word", "business", "issue", "side", "kind", "head", "house", "service", "friend", "father", "power", "hour", "game", "line", "end", "member", "law", "car", "city", "community", "name", "president", "team", "minute", "idea", "kid", "body", "information", "back", "parent", "face", "others", "level", "office", "door", "health", "person", "art", "war", "history", "party", "result", "change", "morning", "reason", "research", "girl", "guy", "moment", "air", "teacher", "force", "education"];
     this.word = 'word';
     this.hp = 3;
     this.currentIndex = 0;
@@ -27,19 +28,15 @@ class WordGame extends HTMLElement {
             if (this.currentIndex !== this.word.length) {
               this.generateVariants(this.currentIndex);
             } else {
-              this.querySelector('.message').innerText = 'You win!';
+              this.restartGame('You win! Correct word is: ' + this.word);
             }
-          } else {
-            this.querySelector('.message').innerText = 'You die!';
-          }
+          } 
         } else {
           this.hp--;
           this.setInfo();
           this.querySelector('.message').innerText = 'Wrong letter!';
           if (this.hp === 0) {
-            this.hp = 3;
-            this.initGame();
-            this.querySelector('.message').innerText = 'You die!';
+            this.restartGame('You die! Correct word is: ' + this.word);
           }
         }
       }
@@ -47,10 +44,23 @@ class WordGame extends HTMLElement {
     });
   }
 
+  setRandomWord() {
+    const randomIndex = Math.floor(Math.random() * this.words.length);
+    this.word = this.words[randomIndex];
+  }
+
   initGame() {
+    this.setRandomWord();
     this.setInfo();
     this.generateVariants(0);
     this.generateEmptyWord(this.word);
+  }
+
+  restartGame(message) {
+    this.hp = 3;
+    this.currentIndex = 0;
+    this.initGame();
+    this.querySelector('.message').innerText = message + '. Game restarted.';
   }
 
   setInfo() {
@@ -61,7 +71,6 @@ class WordGame extends HTMLElement {
   setLetter(letter) {
     const letterContainers = this.querySelectorAll('.letter');
     const letterArray = Array.from(letterContainers);
-
     letterArray[this.currentIndex - 1].innerHTML = letter;
   }
 
@@ -102,9 +111,7 @@ class WordGame extends HTMLElement {
 
     wordWrapper.innerHTML = '';
     for (let i = 1; i <= this.word.length; i++) {
-
       const emptyLetter = document.createElement('div');
-
       emptyLetter.classList.add('letter');
       wordWrapper.append(emptyLetter);
     }
