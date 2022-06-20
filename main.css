@@ -1,8 +1,8 @@
 .main {
   width: 100%;
-  max-width: 600px;
   background-color: azure;
   border: 1px dashed cadetblue;
+  font-family: Calibri, sans-serif;
 }
 
 .variants {
@@ -21,7 +21,6 @@
   align-items: center;
   cursor: pointer;
   font-weight: bold;
-  font-family: Calibri, sans-serif;
 }
 
 .variants__item.error:before, .variants__item.error:after {
@@ -57,13 +56,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Calibri;
 }
 
 .info {
   padding: 20px 0;
 }
 
+.info > * {
+  display: flex;
+  justify-content: space-between;
+  width: 30%;
+  margin: 0 auto;
+  border-bottom: 1px solid lightslategrey;
+  padding: 5px 0;
+}
+
 .heading {
   padding: 20px 0;
+  text-align: center;
+}
+
+.message {
+  text-align: center;
 }
