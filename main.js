@@ -3,9 +3,9 @@ class WordGame extends HTMLElement {
     super()
     this.words = ["time", "year", "people", "way", "day", "man", "thing", "woman", "life", "child", "world", "school", "state", "family", "student", "group", "country", "problem", "hand", "part", "place", "case", "week", "company", "system", "program", "question", "work", "government", "number", "night", "point", "home", "water", "room", "mother", "area", "money", "story", "fact", "month", "lot", "right", "study", "book", "eye", "job", "word", "business", "issue", "side", "kind", "head", "house", "service", "friend", "father", "power", "hour", "game", "line", "end", "member", "law", "car", "city", "community", "name", "president", "team", "minute", "idea", "kid", "body", "information", "back", "parent", "face", "others", "level", "office", "door", "health", "person", "art", "war", "history", "party", "result", "change", "morning", "reason", "research", "girl", "guy", "moment", "air", "teacher", "force", "education"];
     this.word = 'word';
-    this.hp = 3;
+    this.hp = 4;
     this.currentIndex = 0;
-    this.variantsCount = 3;
+    this.variantsCount = 5;
     this.score = 0;
     this.wins = 0;
     this.loses = 0;
@@ -15,7 +15,7 @@ class WordGame extends HTMLElement {
   }
 
   eventListener() {
-    this.addEventListener('click', (e)=>{
+    this.addEventListener('click', (e) => {
       const target = e.target;
 
       if (target.classList.contains('variants__item')) {
@@ -30,6 +30,7 @@ class WordGame extends HTMLElement {
 
             if (this.currentIndex !== this.word.length) {
               this.generateVariants(this.currentIndex);
+              this.randomBorder();
             } else {
               this.addScorePoints(this.word);
               this.wins++;
@@ -40,6 +41,8 @@ class WordGame extends HTMLElement {
           this.hp--;
           this.setInfo();
           this.querySelector('.message').innerText = 'Wrong letter!';
+          target.style.borderColor = 'rgb(201 0 0)';
+          target.classList.add('error');
           if (this.hp === 0) {
             this.loses++;
             this.restartGame('You die! Correct word is: ' + this.word);
@@ -60,10 +63,11 @@ class WordGame extends HTMLElement {
     this.setInfo();
     this.generateVariants(0);
     this.generateEmptyWord(this.word);
+    this.randomBorder();
   }
 
   restartGame(message) {
-    this.hp = 3;
+    this.hp = 4;
     this.currentIndex = 0;
     this.initGame();
     this.querySelector('.message').innerText = message + '. Game restarted.';
@@ -128,6 +132,15 @@ class WordGame extends HTMLElement {
   addScorePoints(word) {
     this.score += word.length;
     this.querySelector('.score').innerHTML = 'Score: ' + this.score;
+  }
+
+  randomBorder() {
+    const letterWrappers = this.querySelectorAll('.variants__item');
+
+    letterWrappers.forEach((element) => {
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      element.style.borderColor = '#' + randomColor;
+    });
   }
 
 }
