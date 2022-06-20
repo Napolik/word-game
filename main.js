@@ -5,10 +5,12 @@ class WordGame extends HTMLElement {
     this.word = 'word';
     this.hp = 4;
     this.currentIndex = 0;
-    this.variantsCount = 5;
     this.score = 0;
     this.wins = 0;
     this.loses = 0;
+    this.level = 0;
+    this.levelPoints = [5, 10, 20, 30, 50];
+    this.variantsCount = 2;
 
     this.initGame();
     this.eventListener();
@@ -74,10 +76,11 @@ class WordGame extends HTMLElement {
   }
 
   setInfo() {
-    this.querySelector('.hp').innerHTML = 'Health points: ' + this.hp;
-    this.querySelector('.currentPosition').innerHTML = 'Current position: ' + this.currentIndex;
-    this.querySelector('.wins').innerHTML = 'Wins: ' + this.wins;
-    this.querySelector('.loses').innerHTML = 'Loses: ' + this.loses;
+    this.querySelector('.hp').innerHTML = '<span class="title">Health points:</span><span class="value">' + this.hp + '</span>';
+    this.querySelector('.currentPosition').innerHTML = '<span class="title">Current position:</span><span class="value">' + this.currentIndex + '</span>';
+    this.querySelector('.wins').innerHTML = '<span class="title">Wins:</span><span class="value"> ' + this.wins + '</span>';
+    this.querySelector('.loses').innerHTML = '<span class="title">Loses: </span><span class="value"> ' + this.loses + '</span>';
+    this.querySelector('.level').innerHTML = '<span class="title">Level: </span><span class="value"> ' + this.level + '</span>';
   }
 
   setLetter(letter) {
@@ -131,7 +134,8 @@ class WordGame extends HTMLElement {
 
   addScorePoints(word) {
     this.score += word.length;
-    this.querySelector('.score').innerHTML = 'Score: ' + this.score;
+    this.querySelector('.score').innerHTML = '<span class="title">Score:</span><span class="value">' + this.score + '</span>';
+    this.checkLevel();
   }
 
   randomBorder() {
@@ -143,6 +147,17 @@ class WordGame extends HTMLElement {
     });
   }
 
+  checkLevel() {
+    this.levelPoints.forEach((needPoints, index) => {
+      if (this.score >= needPoints) {
+        this.level = index + 1;
+          if (this.level >= 2 && this.level <= 7) {
+            this.variantsCount = index + 1;
+          }
+        return false;
+      }
+    });
+  }
 }
 
 customElements.define('word-game', WordGame);
