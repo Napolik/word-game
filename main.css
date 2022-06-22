@@ -21,6 +21,7 @@
   align-items: center;
   cursor: pointer;
   font-weight: bold;
+  transition: all 2s;
 }
 
 .variants__item.error:before, .variants__item.error:after {
