@@ -24,26 +24,24 @@ class WordGame extends HTMLElement {
         const pickedLetter = target.innerText;
 
         if (pickedLetter === this.word[this.currentIndex].toUpperCase()) {
-          if (this.hp > 0) {
             this.currentIndex++;
             this.setLetter(pickedLetter);
             this.setInfo();
-            this.querySelector('.message').innerText = 'Correct letter!';
+            this.writeMessage('Correct letter!');
 
             if (this.currentIndex !== this.word.length) {
               this.generateVariants(this.currentIndex);
               this.randomBorder();
             } else {
               this.addScorePoints(this.word);
+              this.setLevel();
               this.wins++;
               this.restartGame('You win! Correct word is: ' + this.word);
             }
-          }
         } else {
           this.hp--;
           this.setInfo();
-          this.querySelector('.message').innerText = 'Wrong letter!';
-          target.style.borderColor = 'rgb(201 0 0)';
+          this.writeMessage('Wrong letter!');
           target.classList.add('error');
           if (this.hp === 0) {
             this.loses++;
@@ -72,15 +70,15 @@ class WordGame extends HTMLElement {
     this.hp = 4;
     this.currentIndex = 0;
     this.initGame();
-    this.querySelector('.message').innerText = message + '. Game restarted.';
+    this.writeMessage(message);
   }
 
   setInfo() {
-    this.querySelector('.hp').innerHTML = '<span class="title">Health points:</span><span class="value">' + this.hp + '</span>';
-    this.querySelector('.currentPosition').innerHTML = '<span class="title">Current position:</span><span class="value">' + this.currentIndex + '</span>';
-    this.querySelector('.wins').innerHTML = '<span class="title">Wins:</span><span class="value"> ' + this.wins + '</span>';
-    this.querySelector('.loses').innerHTML = '<span class="title">Loses: </span><span class="value"> ' + this.loses + '</span>';
-    this.querySelector('.level').innerHTML = '<span class="title">Level: </span><span class="value"> ' + this.level + '</span>';
+    this.querySelector('.hp .value').innerHTML = this.hp;
+    this.querySelector('.currentPosition .value').innerHTML = this.currentIndex;
+    this.querySelector('.wins .value').innerHTML = this.wins;
+    this.querySelector('.loses .value').innerHTML = this.loses;
+    this.querySelector('.level .value').innerHTML = this.level;
   }
 
   setLetter(letter) {
@@ -134,8 +132,7 @@ class WordGame extends HTMLElement {
 
   addScorePoints(word) {
     this.score += word.length;
-    this.querySelector('.score').innerHTML = '<span class="title">Score:</span><span class="value">' + this.score + '</span>';
-    this.checkLevel();
+    this.querySelector('.score .value').innerHTML = this.score;
   }
 
   randomBorder() {
@@ -147,16 +144,24 @@ class WordGame extends HTMLElement {
     });
   }
 
-  checkLevel() {
+  setLevel() {
     this.levelPoints.forEach((needPoints, index) => {
       if (this.score >= needPoints) {
         this.level = index + 1;
-          if (this.level >= 2 && this.level <= 7) {
-            this.variantsCount = index + 1;
-          }
+        this.setVariantsCount(index);
         return false;
       }
     });
+  }
+
+  setVariantsCount(level) {
+    if (this.level >= 2 && this.level <= 7) {
+      this.variantsCount = level + 1;
+    }
+  }
+
+  writeMessage(text) {
+    this.querySelector('.message').innerText = text;
   }
 }
 
