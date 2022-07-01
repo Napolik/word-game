@@ -21,6 +21,7 @@ class WordGame extends HTMLElement {
     this.setInfo();
     this.generateVariants(0);
     this.generateEmptyWord(this.word);
+    this.setPoints();
     this.randomBorder();
   }
 
@@ -159,6 +160,27 @@ class WordGame extends HTMLElement {
         return false;
       }
     });
+  }
+
+  getPointsToNextLevel() {
+    for (let i = 0; i < this.levelPoints.length; i++) {
+        if (this.levelPoints[i] > this.score ) {
+          if (this.score > this.levelPoints[0]) {
+            return [this.levelPoints[i] - this.score, this.score - this.levelPoints[i-1]];
+          } else {
+            return [this.levelPoints[i] - this.score, this.score];
+          }
+        } else if (this.levelPoints[i] === this.score) {
+          return [this.levelPoints[i+1] - this.score, 0];
+        }
+    }
+  }
+
+  setPoints() {
+    const [toNext, reached] = this.getPointsToNextLevel();
+    this.querySelector('.points-to-next-lvl .value').innerHTML = toNext;
+    this.querySelector('.points-reached-lvl .value').innerHTML = reached;
+    this.querySelector(".progress").style.setProperty('--bar-width', (reached/(reached + toNext))*100 + '%');
   }
 
   setVariantsCount(level) {
