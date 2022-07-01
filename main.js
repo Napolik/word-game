@@ -16,6 +16,22 @@ class WordGame extends HTMLElement {
     this.eventListener();
   }
 
+  initGame() {
+    this.setRandomWord();
+    this.setInfo();
+    this.generateVariants(0);
+    this.generateEmptyWord(this.word);
+    this.setPoints();
+    this.randomBorder();
+  }
+
+  restartGame(message) {
+    this.hp = 4;
+    this.currentIndex = 0;
+    this.initGame();
+    this.writeMessage(message);
+  }
+
   eventListener() {
     this.addEventListener('click', (e) => {
       const target = e.target;
@@ -35,6 +51,7 @@ class WordGame extends HTMLElement {
             } else {
               this.addScorePoints(this.word);
               this.setLevel();
+              this.setVariantsCount(this.level);
               this.wins++;
               this.restartGame('You win! Correct word is: ' + this.word);
             }
@@ -43,6 +60,7 @@ class WordGame extends HTMLElement {
           this.setInfo();
           this.writeMessage('Wrong letter!');
           target.classList.add('error');
+
           if (this.hp === 0) {
             this.loses++;
             this.restartGame('You die! Correct word is: ' + this.word);
@@ -55,27 +73,13 @@ class WordGame extends HTMLElement {
 
   setRandomWord() {
     const randomIndex = Math.floor(Math.random() * this.words.length);
+
     this.word = this.words[randomIndex];
-  }
-
-  initGame() {
-    this.setRandomWord();
-    this.setInfo();
-    this.generateVariants(0);
-    this.generateEmptyWord(this.word);
-    this.randomBorder();
-  }
-
-  restartGame(message) {
-    this.hp = 4;
-    this.currentIndex = 0;
-    this.initGame();
-    this.writeMessage(message);
   }
 
   setInfo() {
     this.querySelector('.hp .value').innerHTML = this.hp;
-    this.querySelector('.currentPosition .value').innerHTML = this.currentIndex;
+    this.querySelector('.current-position .value').innerHTML = this.currentIndex;
     this.querySelector('.wins .value').innerHTML = this.wins;
     this.querySelector('.loses .value').innerHTML = this.loses;
     this.querySelector('.level .value').innerHTML = this.level;
@@ -84,12 +88,14 @@ class WordGame extends HTMLElement {
   setLetter(letter) {
     const letterContainers = this.querySelectorAll('.letter');
     const letterArray = Array.from(letterContainers);
+
     letterArray[this.currentIndex - 1].innerHTML = letter;
   }
 
   getRandomLetter(index) {
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     const alphabet = alpha.map((x) => String.fromCharCode(x));
+
     return alphabet[index];
   }
 
@@ -101,6 +107,7 @@ class WordGame extends HTMLElement {
       const randomLetterIndex = Math.floor(Math.random() * 25) + 1;
       const randomLetter = this.getRandomLetter(randomLetterIndex);
       const arrayContainsLetter = (variants.indexOf(randomLetter) > -1);
+
       if (!arrayContainsLetter && currentLetter !== randomLetter) {
         variants.push(randomLetter);
       }
@@ -109,6 +116,7 @@ class WordGame extends HTMLElement {
     this.querySelector('.variants').innerHTML = '';
     variants.forEach((letter) => {
       const variantsItem = document.createElement('div');
+
       variantsItem.classList.add('variants__item');
       variantsItem.innerText = letter;
       this.querySelector('.variants').append(variantsItem);
@@ -125,6 +133,7 @@ class WordGame extends HTMLElement {
     wordWrapper.innerHTML = '';
     for (let i = 1; i <= this.word.length; i++) {
       const emptyLetter = document.createElement('div');
+
       emptyLetter.classList.add('letter');
       wordWrapper.append(emptyLetter);
     }
@@ -148,10 +157,30 @@ class WordGame extends HTMLElement {
     this.levelPoints.forEach((needPoints, index) => {
       if (this.score >= needPoints) {
         this.level = index + 1;
-        this.setVariantsCount(index);
         return false;
       }
     });
+  }
+
+  getPointsToNextLevel() {
+    for (let i = 0; i < this.levelPoints.length; i++) {
+        if (this.levelPoints[i] > this.score ) {
+          if (this.score > this.levelPoints[0]) {
+            return [this.levelPoints[i] - this.score, this.score - this.levelPoints[i-1]];
+          } else {
+            return [this.levelPoints[i] - this.score, this.score];
+          }
+        } else if (this.levelPoints[i] === this.score) {
+          return [this.levelPoints[i+1] - this.score, 0];
+        }
+    }
+  }
+
+  setPoints() {
+    const [toNext, reached] = this.getPointsToNextLevel();
+    this.querySelector('.points-to-next-lvl .value').innerHTML = toNext;
+    this.querySelector('.points-reached-lvl .value').innerHTML = reached;
+    this.querySelector(".progress").style.setProperty('--bar-width', (reached/(reached + toNext))*100 + '%');
   }
 
   setVariantsCount(level) {
