@@ -40,21 +40,21 @@ class WordGame extends HTMLElement {
         const pickedLetter = target.innerText;
 
         if (pickedLetter === this.word[this.currentIndex].toUpperCase()) {
-            this.currentIndex++;
-            this.setLetter(pickedLetter);
-            this.setInfo();
-            this.writeMessage('Correct letter!');
+          this.currentIndex++;
+          this.setLetter(pickedLetter);
+          this.setInfo();
+          this.writeMessage('Correct letter!');
 
-            if (this.currentIndex !== this.word.length) {
-              this.generateVariants(this.currentIndex);
-              this.randomBorder();
-            } else {
-              this.addScorePoints(this.word);
-              this.setLevel();
-              this.setVariantsCount(this.level);
-              this.wins++;
-              this.restartGame('You win! Correct word is: ' + this.word);
-            }
+          if (this.currentIndex !== this.word.length) {
+            this.generateVariants(this.currentIndex);
+            this.randomBorder();
+          } else {
+            this.addScorePoints(this.word);
+            this.setLevel();
+            this.setVariantsCount(this.level);
+            this.wins++;
+            this.restartGame('You win! Correct word is: ' + this.word);
+          }
         } else {
           this.hp--;
           this.setInfo();
@@ -127,6 +127,8 @@ class WordGame extends HTMLElement {
     randomContainerForLetter.innerHTML = currentLetter;
   }
 
+  с
+
   generateEmptyWord() {
     const wordWrapper = this.querySelector('.word');
 
@@ -162,25 +164,27 @@ class WordGame extends HTMLElement {
     });
   }
 
-  getPointsToNextLevel() {
+  getPoints() {
     for (let i = 0; i < this.levelPoints.length; i++) {
-        if (this.levelPoints[i] > this.score ) {
-          if (this.score > this.levelPoints[0]) {
-            return [this.levelPoints[i] - this.score, this.score - this.levelPoints[i-1]];
-          } else {
-            return [this.levelPoints[i] - this.score, this.score];
-          }
-        } else if (this.levelPoints[i] === this.score) {
-          return [this.levelPoints[i+1] - this.score, 0];
+      if (this.levelPoints[i] > this.score) {
+        if (this.score > this.levelPoints[0]) {
+          return [this.levelPoints[i] - this.score, this.score - this.levelPoints[i - 1]];
+        } else {
+          return [this.levelPoints[i] - this.score, this.score];
         }
+      } else if (this.levelPoints[i] === this.score) {
+        return [this.levelPoints[i + 1] - this.score, 0];
+      }
     }
   }
 
   setPoints() {
-    const [toNext, reached] = this.getPointsToNextLevel();
+    const [toNext, reached] = this.getPoints();
+    const barWidth = (reached / (reached + toNext)) * 100 + '%';
+
     this.querySelector('.points-to-next-lvl .value').innerHTML = toNext;
     this.querySelector('.points-reached-lvl .value').innerHTML = reached;
-    this.querySelector(".progress").style.setProperty('--bar-width', (reached/(reached + toNext))*100 + '%');
+    this.querySelector(".progress").style.setProperty('--bar-width', barWidth);
   }
 
   setVariantsCount(level) {
